@@ -8,6 +8,11 @@ export default defineConfig({
   server: {
     port: 5173,
     strictPort: false,
+    watch: {
+      // Windows (especially Downloads): large JPGs in `public/` can throw EBUSY while AV scans.
+      ignored: ['**/public/images/**'],
+      usePolling: process.platform === 'win32',
+    },
   },
   resolve: {
     alias: {

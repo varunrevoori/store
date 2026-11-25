@@ -56,8 +56,11 @@ export function RequestAccessPage() {
 
   return (
     <AuthLayout
-      title="Request access (business owner)"
-      subtitle="For new salons/stores only. Managers and staff are added by your owner inside the CRM."
+      page="request"
+      formSize="tall"
+      badge="Step 1 — business owner"
+      title="Create your access request"
+      subtitle="Tell us about your salon or store. Staff logins are added later from the Staff screen."
       footer={
         <p className="text-center text-sm text-muted">
           Already on staff?{' '}
@@ -81,12 +84,12 @@ export function RequestAccessPage() {
       ) : (
         <>
           {error ? <FormAlert>{error}</FormAlert> : null}
-          <form className="space-y-4" onSubmit={onSubmit}>
-            <div>
+          <form className="auth-form-fields" onSubmit={onSubmit}>
+            <div className="auth-form-field auth-form-field--full">
               <Label htmlFor="ra-name">Full name</Label>
               <Input id="ra-name" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
             </div>
-            <div>
+            <div className="auth-form-field">
               <Label htmlFor="ra-email">Work email</Label>
               <Input
                 id="ra-email"
@@ -96,7 +99,16 @@ export function RequestAccessPage() {
                 required
               />
             </div>
-            <div>
+            <div className="auth-form-field">
+              <Label htmlFor="ra-phone">Phone</Label>
+              <Input
+                id="ra-phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+91 …"
+              />
+            </div>
+            <div className="auth-form-field">
               <Label htmlFor="ra-pass">Password</Label>
               <div className="relative">
                 <Input
@@ -119,7 +131,7 @@ export function RequestAccessPage() {
                 </button>
               </div>
             </div>
-            <div>
+            <div className="auth-form-field">
               <Label htmlFor="ra-confirm">Confirm password</Label>
               <Input
                 id="ra-confirm"
@@ -131,16 +143,7 @@ export function RequestAccessPage() {
                 required
               />
             </div>
-            <div>
-              <Label htmlFor="ra-phone">Phone</Label>
-              <Input
-                id="ra-phone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="+91 …"
-              />
-            </div>
-            <div>
+            <div className="auth-form-field auth-form-field--full">
               <Label htmlFor="ra-company">Company / salon name</Label>
               <Input
                 id="ra-company"
@@ -149,7 +152,7 @@ export function RequestAccessPage() {
                 required
               />
             </div>
-            <button type="submit" disabled={loading} className="btn-primary btn-full !h-11">
+            <button type="submit" disabled={loading} className="btn-primary btn-full !h-11 auth-form-submit">
               {loading ? 'Submitting…' : 'Submit for superadmin review'}
             </button>
           </form>

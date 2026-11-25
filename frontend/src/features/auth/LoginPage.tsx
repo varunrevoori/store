@@ -21,6 +21,7 @@ export function LoginPage() {
   if (!isSupabaseConfigured || !supabase) {
     return (
       <AuthLayout
+        page="login"
         title="Sign-in isn’t ready yet"
         subtitle="Supabase authentication keys are missing from this deployment."
       >
@@ -54,8 +55,9 @@ export function LoginPage() {
 
   return (
     <AuthLayout
-      title="Sign in"
-      subtitle="Use the email and password for your Supabase account"
+      page="login"
+      title="Welcome back"
+      subtitle="Sign in with the email and password for your workspace."
       footer={
         <p className="text-center text-sm text-muted">
           Need access?{' '}
@@ -67,7 +69,7 @@ export function LoginPage() {
     >
       {error ? <FormAlert>{error}</FormAlert> : null}
 
-      <form className="space-y-4" onSubmit={onSubmit}>
+      <form className="auth-form-fields auth-form-fields--single" onSubmit={onSubmit}>
         <div>
           <Label htmlFor="login-email">Email</Label>
           <Input

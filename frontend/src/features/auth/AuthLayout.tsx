@@ -8,45 +8,60 @@ export function AuthLayout({
   subtitle,
   children,
   footer,
+  page = 'login',
+  formSize = 'default',
+  badge,
 }: {
   title: string;
   subtitle?: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
+  page?: 'login' | 'request';
+  formSize?: 'default' | 'tall';
+  badge?: string;
 }) {
+  const cardClass =
+    formSize === 'tall' ? 'glass-auth-card glass-auth-card--tall' : 'glass-auth-card';
+  const defaultBadge = page === 'login' ? 'Workspace sign-in' : 'Owner onboarding';
+
   return (
-    <div className="auth-shell">
+    <div className={`auth-shell auth-shell--${page}`}>
       <LonSaBackground />
-      <header className="auth-topbar">
+
+      <header className="auth-mobile-bar md:hidden">
         <Link to="/" className="auth-topbar-brand">
           <span className="logo-mark">L</span>
           <span className="font-display font-bold text-lg">LonSa</span>
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <ThemeToggle />
-          <Link to="/" className="auth-topbar-link hidden sm:inline">
+          <Link to="/" className="auth-topbar-link">
             Home
-          </Link>
-          <Link to="/login" className="auth-topbar-link hidden md:inline">
-            Sign in
           </Link>
         </div>
       </header>
 
       <aside className="auth-brand-panel">
+        <div className="auth-brand-bar hidden md:flex">
+          <Link to="/" className="auth-brand-logo">
+            <span className="logo-mark logo-mark--on-dark">L</span>
+            <span className="font-display font-bold text-lg text-white">LonSa</span>
+          </Link>
+        </div>
         <div className="auth-brand-panel-content">
           <p className="auth-brand-eyebrow">AI Salon OS</p>
           <h2 className="auth-brand-headline">
-            Run branches,
-            <br />
-            calendar &amp; POS
-            <br />
-            from one login
+            Run branches, calendar &amp; POS from one login
           </h2>
           <p className="auth-brand-tagline">
             Owners onboard here; managers and stylists sign in after you add them in Staff.
           </p>
         </div>
+        <ul className="auth-brand-points hidden md:block">
+          <li>Multi-branch dashboard &amp; calendars</li>
+          <li>POS with GST-ready billing</li>
+          <li>Staff roles, CRM &amp; inventory</li>
+        </ul>
         <div className="auth-brand-foot">
           <Sparkles size={16} className="text-sky-2 shrink-0" strokeWidth={1.75} />
           <span>Built for Indian salons — GST-ready billing &amp; multi-branch CRM</span>
@@ -54,11 +69,32 @@ export function AuthLayout({
       </aside>
 
       <main className="auth-form-col">
-        <div className="glass-auth-card">
-          <h1 className="font-display text-2xl font-extrabold text-ink text-center">{title}</h1>
-          {subtitle ? <p className="text-sm text-muted mt-2 text-center leading-relaxed">{subtitle}</p> : null}
-          <div className="mt-6">{children}</div>
-          {footer ? <div className="mt-6 pt-1">{footer}</div> : null}
+        <header className="auth-form-bar hidden md:flex">
+          <ThemeToggle />
+          <Link to="/" className="auth-topbar-link">
+            Home
+          </Link>
+          {page === 'login' ? (
+            <Link to="/request-access" className="btn-primary no-underline !h-9 !px-4 text-sm">
+              Request access
+            </Link>
+          ) : (
+            <Link to="/login" className="auth-topbar-link">
+              Sign in
+            </Link>
+          )}
+        </header>
+
+        <div className="auth-form-body">
+          <div className={cardClass}>
+            <header className="auth-card-head">
+              <p className="auth-card-badge">{badge ?? defaultBadge}</p>
+              <h1 className="auth-card-title">{title}</h1>
+              {subtitle ? <p className="auth-card-subtitle">{subtitle}</p> : null}
+            </header>
+            <div className="auth-card-body">{children}</div>
+            {footer ? <footer className="auth-card-foot">{footer}</footer> : null}
+          </div>
         </div>
       </main>
     </div>
