@@ -38,6 +38,16 @@ Or run one at a time: `npm run dev:backend`, `npm run dev:frontend`.
 
 Dev OTP **`482619`** is no longer used; OTP comes from Supabase/SMS.
 
+## Deploy frontend (Vercel)
+
+This repo is an **npm workspaces** monorepo; the Vite app lives in `frontend/` but install/build must run from the **repository root** (for `@lon-crm/shared`).
+
+1. **Project → Settings → General → Root Directory:** leave empty (`.` / repo root), not `frontend`.
+2. **Project → Settings → Build & Development:** clear any custom **Install Command** (remove `npm install --prefix=..`). Use defaults or the `vercel.json` in this repo (`npm install`, `npm run build`, output `frontend/dist`).
+3. **Environment variables:** set `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and `VITE_API_URL` (your hosted API URL).
+
+Redeploy after changing Root Directory or install settings.
+
 ## Scripts
 
 | Command | Description |
