@@ -1,0 +1,153 @@
+@import './tokens.css';
+@import './lonsa.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body,
+.lonsa-app,
+button,
+input,
+select,
+textarea {
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-canvas);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease;
+}
+
+.lonsa-app {
+  height: 100%;
+  min-height: 100%;
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+/* Tailwind slate utilities don't follow theme — remap in dark mode */
+[data-theme='dark'] .lonsa-app .text-slate-400 {
+  color: var(--text-muted);
+}
+
+[data-theme='dark'] .lonsa-app .text-slate-500 {
+  color: var(--text-secondary);
+}
+
+[data-theme='dark'] .lonsa-app .text-slate-600 {
+  color: var(--text-secondary);
+}
+
+[data-theme='dark'] .lonsa-app .text-slate-700 {
+  color: var(--ink);
+}
+
+[data-theme='dark'] .public-page .text-slate-400,
+[data-theme='dark'] .public-page .text-slate-500,
+[data-theme='dark'] .public-page .text-slate-600 {
+  color: var(--text-secondary);
+}
+
+[data-theme='dark'] .public-gradient-shell .text-slate-400,
+[data-theme='dark'] .public-gradient-shell .text-slate-500 {
+  color: var(--text-muted);
+}
+
+.list-row-hover:hover {
+  background: var(--tbl-row-hover);
+}
+
+html {
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: Inter, system-ui, sans-serif;
+}
+
+/* Surfaces & borders that still use Tailwind slate/white — theme in dark mode */
+[data-theme='dark'] .lonsa-app .bg-white,
+[data-theme='dark'] .lonsa-app .bg-white\/90,
+[data-theme='dark'] .lonsa-app .bg-white\/50,
+[data-theme='dark'] .public-gradient-shell .bg-white,
+[data-theme='dark'] .public-gradient-shell .bg-white\/90 {
+  background-color: var(--bg-glass) !important;
+}
+
+[data-theme='dark'] .lonsa-app .bg-slate-100,
+[data-theme='dark'] .lonsa-app .bg-slate-50 {
+  background-color: var(--tabs-bg) !important;
+  color: var(--text-secondary);
+}
+
+[data-theme='dark'] .lonsa-app .border-slate-100,
+[data-theme='dark'] .lonsa-app .border-slate-200,
+[data-theme='dark'] .lonsa-app .border-slate-200\/80,
+[data-theme='dark'] .lonsa-app .border-white,
+[data-theme='dark'] .lonsa-app .border-white\/80,
+[data-theme='dark'] .lonsa-app .border-white\/90 {
+  border-color: var(--line) !important;
+}
+
+[data-theme='dark'] .lonsa-app .from-pink-50 {
+  --tw-gradient-from: rgba(209, 48, 149, 0.14) var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(209 48 149 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+
+[data-theme='dark'] .lonsa-app .to-violet-50 {
+  --tw-gradient-to: rgba(123, 92, 255, 0.12) var(--tw-gradient-to-position);
+}
+
+[data-theme='dark'] .lonsa-app .border-pink-100 {
+  border-color: rgba(209, 48, 149, 0.22) !important;
+}
+
+[data-theme='dark'] .lonsa-app .bg-emerald-50,
+[data-theme='dark'] .lonsa-app .bg-emerald-100 {
+  background-color: var(--alert-success-bg) !important;
+}
+
+[data-theme='dark'] .lonsa-app .text-emerald-800 {
+  color: #5eead4 !important;
+}
+
+[data-theme='dark'] .lonsa-app .bg-red-50 {
+  background-color: var(--alert-error-bg) !important;
+}
+
+[data-theme='dark'] .lonsa-app .text-red-600,
+[data-theme='dark'] .lonsa-app .text-red-700 {
+  color: #f9a8d4 !important;
+}
+
+[data-theme='dark'] .lonsa-app .text-slate-200 {
+  color: rgba(255, 255, 255, 0.18) !important;
+}
+
+[data-theme='dark'] .lonsa-app .bg-pink-50\/50 {
+  background-color: rgba(209, 48, 149, 0.08) !important;
+}
+
+[data-theme='dark'] select option {
+  background: var(--bg-glass-strong);
+  color: var(--ink);
+}

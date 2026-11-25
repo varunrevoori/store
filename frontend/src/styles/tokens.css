@@ -1,0 +1,107 @@
+/* LonSa theme tokens — light / dark */
+:root,
+[data-theme='light'] {
+  --sky: #3598cb;
+  --sky-2: #5fb6e3;
+  --hot: #d13095;
+  --violet: #7b5cff;
+  --orange: #ff8a4c;
+  --surface: #fcffff;
+  --ink: #121522;
+  --maroon: #22101b;
+  --line: rgba(18, 21, 34, 0.08);
+
+  --bg-canvas: #f2f5f9;
+  --bg-canvas-gradient: #f2f5f9;
+  --bg-glass: #ffffff;
+  --bg-glass-strong: #ffffff;
+  --border-glass: rgba(18, 21, 34, 0.06);
+  --text-secondary: #5b6378;
+  --text-muted: #7a8296;
+  --shadow-card: 0 12px 40px -16px rgba(30, 45, 90, 0.22);
+  --dropdown-bg: rgba(252, 255, 255, 0.97);
+  --dropdown-border: rgba(255, 255, 255, 0.8);
+  --dd-text: #334155;
+  --inp-bg: rgba(255, 255, 255, 0.92);
+  --inp-border: rgba(18, 21, 34, 0.1);
+  --modal-backdrop: rgba(14, 10, 20, 0.42);
+  --cal-head-bg: rgba(246, 249, 252, 0.8);
+  --tbl-th-bg: rgba(246, 249, 252, 0.96);
+  --tbl-row-hover: rgba(53, 152, 203, 0.06);
+  --btn-ghost-bg: rgba(255, 255, 255, 0.7);
+  --btn-ghost-text: #2b3245;
+  --tabs-bg: rgba(18, 21, 34, 0.05);
+  --tabs-on-bg: #fff;
+  --icon-muted: #5b6378;
+  --bar-track: rgba(18, 21, 34, 0.07);
+  --orb-scale: 1;
+  --auth-panel-bg: linear-gradient(
+    165deg,
+    rgba(28, 15, 25, 0.98) 0%,
+    rgba(33, 16, 25, 0.96) 45%,
+    rgba(19, 12, 21, 0.98) 100%
+  );
+  --alert-error-bg: rgba(209, 48, 149, 0.08);
+  --alert-success-bg: rgba(16, 185, 129, 0.1);
+
+  --shell-bg: var(--bg-canvas);
+  --shell-border: var(--line);
+  --shell-muted: #7a8296;
+  --shell-text: #3d4559;
+  --shell-hover: rgba(53, 152, 203, 0.08);
+  --shell-active-bg: rgba(53, 152, 203, 0.12);
+  --shell-active-text: #121522;
+  --shell-chip-bg: rgba(18, 21, 34, 0.05);
+  --shell-btn-bg: #ffffff;
+  --shell-btn-border: var(--line);
+  --sidebar-surface: rgba(255, 255, 255, 0.72);
+  --main-surface: #f2f5f9;
+  --topbar-surface: rgba(255, 255, 255, 0.88);
+}
+
+[data-theme='dark'] {
+  --ink: #f8f7fb;
+  --surface: #1e1a26;
+  --line: rgba(255, 255, 255, 0.08);
+
+  --bg-canvas: #16141c;
+  --bg-canvas-gradient: #16141c;
+  --bg-glass: #1f1d28;
+  --bg-glass-strong: #252330;
+  --border-glass: rgba(255, 255, 255, 0.07);
+  --text-secondary: rgba(255, 255, 255, 0.78);
+  --text-muted: rgba(255, 255, 255, 0.55);
+  --shadow-card: 0 12px 48px -16px rgba(0, 0, 0, 0.55);
+  --dropdown-bg: rgba(32, 18, 28, 0.98);
+  --dropdown-border: rgba(255, 255, 255, 0.1);
+  --dd-text: rgba(255, 255, 255, 0.88);
+  --inp-bg: rgba(255, 255, 255, 0.06);
+  --inp-border: rgba(255, 255, 255, 0.12);
+  --modal-backdrop: rgba(0, 0, 0, 0.62);
+  --cal-head-bg: rgba(255, 255, 255, 0.04);
+  --tbl-th-bg: rgba(255, 255, 255, 0.04);
+  --tbl-row-hover: rgba(53, 152, 203, 0.1);
+  --btn-ghost-bg: rgba(255, 255, 255, 0.06);
+  --btn-ghost-text: rgba(255, 255, 255, 0.88);
+  --tabs-bg: rgba(255, 255, 255, 0.06);
+  --tabs-on-bg: rgba(53, 152, 203, 0.22);
+  --icon-muted: rgba(255, 255, 255, 0.5);
+  --bar-track: rgba(255, 255, 255, 0.08);
+  --orb-scale: 0.55;
+  --alert-error-bg: rgba(209, 48, 149, 0.15);
+  --alert-success-bg: rgba(16, 185, 129, 0.14);
+
+  --shell-bg: var(--bg-canvas);
+  --shell-border: var(--line);
+  --shell-muted: rgba(255, 255, 255, 0.45);
+  --shell-text: rgba(255, 255, 255, 0.78);
+  --shell-hover: rgba(53, 152, 203, 0.14);
+  --shell-active-bg: rgba(53, 152, 203, 0.2);
+  --shell-active-text: #f5f8ff;
+  --shell-chip-bg: rgba(255, 255, 255, 0.06);
+  --shell-btn-bg: var(--bg-glass);
+  --shell-btn-border: var(--line);
+  --sidebar-surface: rgba(22, 20, 28, 0.92);
+  --main-surface: var(--bg-canvas);
+  --topbar-surface: rgba(22, 20, 28, 0.9);
+}

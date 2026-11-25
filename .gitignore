@@ -1,0 +1,33 @@
+# Prototype reference (not part of the React app)
+LonSa.html
+
+# Secrets & environment (never commit)
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.local
+**/.env.*.local
+!**/.env.example
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build & caches
+dist/
+**/dist/
+.cache/
+**/.vite/
+*.tsbuildinfo
+frontend/tsconfig.tsbuildinfo
+
+# Logs & OS
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# IDE / tooling
+.cursor/
+agent-transcripts/

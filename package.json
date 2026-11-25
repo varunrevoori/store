@@ -1,0 +1,30 @@
+{
+  "name": "lon-crm",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Salon + store CRM — React (TS) frontend, Express (JS) backend",
+  "workspaces": [
+    "frontend",
+    "backend",
+    "packages/*"
+  ],
+  "scripts": {
+    "postinstall": "node scripts/postinstall.mjs",
+    "dev": "concurrently -n backend,frontend -c blue,green \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "npm run dev -w @lon-crm/frontend",
+    "dev:backend": "npm run dev -w @lon-crm/backend",
+    "check:env": "node scripts/check-env.mjs",
+    "typecheck": "npm run typecheck -w @lon-crm/frontend",
+    "build": "npm run build -w @lon-crm/frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "rollup": "npm:@rollup/wasm-node@4.68.8"
+  },
+  "overrides": {
+    "rollup": "npm:@rollup/wasm-node@4.68.8",
+    "vite": {
+      "rollup": "npm:@rollup/wasm-node@4.68.8"
+    }
+  }
+}
