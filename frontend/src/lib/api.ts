@@ -22,6 +22,10 @@ async function resolveAccessToken(): Promise<string | null> {
   return userData.user ? (await supabase.auth.getSession()).data.session?.access_token ?? null : null;
 }
 
+export function getApiBaseUrl(): string {
+  return API_BASE;
+}
+
 export async function apiFetch(input: string, init: RequestInit = {}) {
   const headers = new Headers(init.headers);
 
@@ -54,6 +58,25 @@ export async function apiFetch(input: string, init: RequestInit = {}) {
     return cachedGet(url, () => fetch(url, { ...init, headers, credentials: 'include', mode: 'cors' }));
   }
   return fetch(url, { ...init, headers, credentials: 'include', mode: 'cors' });
+}
+
+/** Avoid infinite spinners when the API is down or VITE_API_URL points at localhost. */
+export async function apiFetchWithTimeout(
+  input: string,
+  init: RequestInit = {},
+  timeoutMs = 12_000,
+) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  const ext = init.signal;
+  if (ext) {
+    ext.addEventListener('abort', () => ctrl.abort(), { once: true });
+  }
+  try {
+    return await apiFetch(input, { ...init, signal: ctrl.signal });
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 export { invalidateApiCache };

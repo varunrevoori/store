@@ -8,7 +8,11 @@ export function PostAuthRouter() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    void redirectAfterAuth(navigate);
+    void redirectAfterAuth(navigate).catch(() => {
+      navigate(`/access-pending?reason=api&api=${encodeURIComponent(import.meta.env.VITE_API_URL ?? 'http://localhost:8080')}`, {
+        replace: true,
+      });
+    });
   }, [navigate]);
 
   return <Spinner label="Preparing your dashboard…" />;
