@@ -6,6 +6,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthLayout } from './AuthLayout';
+import { SupabaseConfigNotice } from './SupabaseConfigNotice';
 import { redirectAfterAuth } from './redirectAfterAuth';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,11 +20,11 @@ export function LoginPage() {
 
   if (!isSupabaseConfigured || !supabase) {
     return (
-      <AuthLayout title="Supabase required" subtitle="Configure auth keys in .env (see .env.example).">
-        <p className="text-sm text-muted text-center">
-          Set <code className="text-xs">VITE_SUPABASE_URL</code> and{' '}
-          <code className="text-xs">VITE_SUPABASE_ANON_KEY</code> locally.
-        </p>
+      <AuthLayout
+        title="Sign-in isn’t ready yet"
+        subtitle="Supabase authentication keys are missing from this deployment."
+      >
+        <SupabaseConfigNotice />
       </AuthLayout>
     );
   }
