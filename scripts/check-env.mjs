@@ -2,6 +2,7 @@
  * Safe env check — prints hosts and booleans only, never key values.
  * Run: npm run check:env
  */
+import { deploymentLabel, resolveApiBase, resolveWebOrigins } from '@lon-crm/shared';
 import { config as loadEnv } from 'dotenv';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -32,10 +33,20 @@ const pairs = [
 
 const serviceRole = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const anon = process.env.VITE_SUPABASE_ANON_KEY;
-const apiUrl = process.env.VITE_API_URL ?? 'http://localhost:8080';
+
+const mode = deploymentLabel(process.env);
+const apiUrl = resolveApiBase({
+  apiUrlFromEnv: process.env.VITE_API_URL,
+  isDev: process.env.NODE_ENV !== 'production',
+  browserOrigin: undefined,
+});
+const webOrigins = resolveWebOrigins(process.env);
 
 console.log('--- Lon CRM env check (no secrets printed) ---\n');
-console.log('VITE_API_URL:', apiUrl);
+console.log('Mode:', mode);
+console.log('Resolved API base (no browser):', apiUrl);
+console.log('VITE_API_URL raw:', process.env.VITE_API_URL?.trim() || '(unset → defaults above)');
+console.log('WEB_ORIGIN / CORS allow-list:', webOrigins.join(', '));
 
 for (const [name, value] of pairs) {
   console.log(`${name} host:`, host(value) ?? '(not set)');

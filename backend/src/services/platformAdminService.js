@@ -2,28 +2,7 @@ import { getSupabaseAdmin } from '../lib/supabase.js';
 import * as accessRequestModel from '../models/accessRequestModel.js';
 import * as platformRequestModel from '../models/platformRequestModel.js';
 import { applyApprovedPlatformRequest } from './decidePlatformRequest.js';
-
-function slugify(text) {
-  const base = String(text ?? '')
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 48);
-  return base || 'org';
-}
-
-async function uniqueOrgSlug(name) {
-  const sb = getSupabaseAdmin();
-  let slug = slugify(name);
-  let attempt = 0;
-  for (;;) {
-    const candidate = attempt === 0 ? slug : `${slug}-${attempt}`;
-    const { data } = await sb.from('organization').select('id').eq('slug', candidate).maybeSingle();
-    if (!data) return candidate;
-    attempt += 1;
-  }
-}
+import { provisionOwnerOrg } from './ownerOrgProvisionService.js';
 
 async function resolveAuthUserIdForAccessRequest(row) {
   if (row.authUserId) {
@@ -43,62 +22,6 @@ async function resolveAuthUserIdForAccessRequest(row) {
   err.status = 400;
   err.code = 'NO_AUTH_USER';
   throw err;
-}
-
-async function provisionOwnerOrg({ userId, email, fullName, companyName, vertical, orgRole }) {
-  if (!userId) return null;
-
-  const sb = getSupabaseAdmin();
-  const orgName = companyName?.trim() || fullName || email.split('@')[0];
-  const slug = await uniqueOrgSlug(orgName);
-  const vert = vertical ?? 'SALON';
-
-  const { data: org, error: orgErr } = await sb
-    .from('organization')
-    .insert({ name: orgName, slug, vertical: vert, settings: {} })
-    .select('id, slug, name')
-    .single();
-  if (orgErr) throw orgErr;
-
-  await sb.from('profile').upsert({
-    id: userId,
-    email,
-    full_name: fullName,
-    updated_at: new Date().toISOString(),
-  });
-
-  const memberRole = orgRole ?? 'OWNER';
-  await sb.from('org_member').insert({
-    org_id: org.id,
-    profile_id: userId,
-    role: memberRole,
-  });
-
-  const { data: branch, error: branchErr } = await sb
-    .from('branch')
-    .insert({
-      org_id: org.id,
-      name: 'Main',
-      area: null,
-      timezone: 'Asia/Kolkata',
-      is_active: true,
-    })
-    .select('id')
-    .single();
-  if (branchErr) throw branchErr;
-
-  const { data: member } = await sb
-    .from('org_member')
-    .select('id')
-    .eq('org_id', org.id)
-    .eq('profile_id', userId)
-    .single();
-
-  if (member?.id && branch?.id) {
-    await sb.from('org_member_branch').insert({ member_id: member.id, branch_id: branch.id });
-  }
-
-  return org;
 }
 
 export async function listOrganizations() {
@@ -171,17 +94,22 @@ export async function approveAccessRequest(id, reviewerId, options = {}) {
       userId,
       email: row.email,
       fullName: row.fullName,
+      phone: row.phone,
       companyName: row.companyName,
       vertical: options.vertical,
       orgRole,
     });
   } else if (userId) {
-    await getSupabaseAdmin().from('profile').upsert({
+    const profileRow = {
       id: userId,
       email: row.email,
       full_name: row.fullName,
       updated_at: new Date().toISOString(),
-    });
+    };
+    if (row.phone?.trim()) {
+      profileRow.phone = row.phone.trim();
+    }
+    await getSupabaseAdmin().from('profile').upsert(profileRow);
   }
 
   const updated = await accessRequestModel.decideAccessRequest(id, {

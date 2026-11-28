@@ -1,5 +1,6 @@
 import { Spinner } from '@/components/ui/Spinner';
 import { useEffect } from 'react';
+import { getApiBaseUrl } from '@/lib/api';
 import { redirectAfterAuth } from './redirectAfterAuth';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,7 +10,7 @@ export function PostAuthRouter() {
 
   useEffect(() => {
     void redirectAfterAuth(navigate).catch(() => {
-      navigate(`/access-pending?reason=api&api=${encodeURIComponent(import.meta.env.VITE_API_URL ?? 'http://localhost:8080')}`, {
+      navigate(`/access-pending?reason=api&api=${encodeURIComponent(getApiBaseUrl())}`, {
         replace: true,
       });
     });

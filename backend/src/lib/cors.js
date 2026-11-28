@@ -1,15 +1,9 @@
+import { resolveWebOrigins } from '@lon-crm/shared';
+
 const DEV_LOCALHOST = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/;
 
-function allowedOriginsFromEnv() {
-  const raw = process.env.WEB_ORIGIN ?? 'http://localhost:5173';
-  return raw
-    .split(',')
-    .map((s) => s.trim())
-    .filter(Boolean);
-}
-
 export function corsOptions() {
-  const allowList = allowedOriginsFromEnv();
+  const allowList = resolveWebOrigins(process.env);
   const isDev = process.env.NODE_ENV !== 'production';
 
   return {

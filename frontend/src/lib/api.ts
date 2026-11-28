@@ -1,18 +1,19 @@
-import { API_PREFIX } from '@lon-crm/shared';
+import { API_PREFIX, resolveApiBase } from '@lon-crm/shared';
 import { cachedGet, invalidateApiCache } from './apiCache';
 import { supabase } from './supabase';
 import { getStoredBranchId, getStoredOrgSlug } from './tenantStorage';
 
-function resolveApiBase(): string {
-  const fromEnv = String(import.meta.env.VITE_API_URL ?? '').trim().replace(/\/$/, '');
-  if (fromEnv) return fromEnv;
-  if (typeof window !== 'undefined' && window.location?.origin) {
-    return window.location.origin;
-  }
-  return 'http://localhost:8080';
+function computeApiBase(): string {
+  const browserOrigin =
+    typeof window !== 'undefined' && window.location?.origin ? window.location.origin : undefined;
+  return resolveApiBase({
+    apiUrlFromEnv: import.meta.env.VITE_API_URL,
+    isDev: import.meta.env.DEV,
+    browserOrigin,
+  });
 }
 
-const API_BASE = resolveApiBase();
+const API_BASE = computeApiBase();
 
 let readAccessToken: (() => string | null | undefined) | null = null;
 

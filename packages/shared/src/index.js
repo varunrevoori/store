@@ -35,3 +35,12 @@ export const AuthLoginSchema = z.object({
 });
 
 export const API_PREFIX = '/api/v1';
+
+export {
+  LOCAL_API_BASE,
+  LOCAL_WEB_ORIGIN,
+  trimTrailingSlash,
+  resolveWebOrigins,
+  resolveApiBase,
+  deploymentLabel,
+} from './appEnv.js';

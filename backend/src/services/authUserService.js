@@ -1,7 +1,7 @@
 import { getSupabaseAdmin } from '../lib/supabase.js';
 
 /** Create or update Supabase Auth user with password (email confirmed, no invite email). */
-export async function ensureAuthUserWithPassword({ email, password, fullName }) {
+export async function ensureAuthUserWithPassword({ email, password, fullName, phone }) {
   const sb = getSupabaseAdmin();
   const normalized = String(email).trim().toLowerCase();
 
@@ -12,11 +12,16 @@ export async function ensureAuthUserWithPassword({ email, password, fullName }) 
     throw err;
   }
 
+  const userMetadata = { full_name: fullName };
+  if (phone) {
+    userMetadata.phone = phone;
+  }
+
   const { data: created, error: createErr } = await sb.auth.admin.createUser({
     email: normalized,
     password,
     email_confirm: true,
-    user_metadata: { full_name: fullName },
+    user_metadata: userMetadata,
   });
 
   if (!createErr && created?.user?.id) {
@@ -33,7 +38,7 @@ export async function ensureAuthUserWithPassword({ email, password, fullName }) 
     }
     const { error: updateErr } = await sb.auth.admin.updateUserById(userId, {
       password,
-      user_metadata: { full_name: fullName },
+      user_metadata: userMetadata,
     });
     if (updateErr) throw updateErr;
     return userId;

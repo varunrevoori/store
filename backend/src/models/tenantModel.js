@@ -67,20 +67,22 @@ export async function upsertProfile(user) {
   if (!isSupabaseConfigured()) return null;
 
   const phone = user.phone ?? user.user_metadata?.phone ?? null;
+  const normalizedPhone = phone && String(phone).trim() ? String(phone).trim() : null;
   const fullName = user.user_metadata?.full_name ?? null;
   const email = user.email ?? null;
 
+  const row = {
+    id: user.id,
+    email,
+    full_name: fullName,
+    updated_at: new Date().toISOString(),
+  };
+  if (normalizedPhone) {
+    row.phone = normalizedPhone;
+  }
+
   const sb = admin();
-  const { data, error } = await sb.from('profile').upsert(
-    {
-      id: user.id,
-      phone,
-      email,
-      full_name: fullName,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: 'id' },
-  ).select().maybeSingle();
+  const { data, error } = await sb.from('profile').upsert(row, { onConflict: 'id' }).select().maybeSingle();
 
   if (error) throw error;
   return data;

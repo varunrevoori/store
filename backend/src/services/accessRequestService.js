@@ -2,9 +2,15 @@ import * as accessRequestModel from '../models/accessRequestModel.js';
 import { ensureAuthUserWithPassword } from './authUserService.js';
 import { upsertProfile } from '../models/tenantModel.js';
 
+function normalizeOptionalPhone(value) {
+  const trimmed = String(value ?? '').trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
 export async function submitAccessRequest(body) {
   const email = body.email?.trim();
   const fullName = body.fullName?.trim() ?? body.full_name?.trim();
+  const phone = normalizeOptionalPhone(body.phone ?? body.phone_number);
   const password = body.password;
 
   if (!email || !fullName) {
@@ -21,12 +27,13 @@ export async function submitAccessRequest(body) {
     throw err;
   }
 
-  const authUserId = await ensureAuthUserWithPassword({ email, password, fullName });
+  const authUserId = await ensureAuthUserWithPassword({ email, password, fullName, phone });
 
   await upsertProfile({
     id: authUserId,
     email: email.toLowerCase(),
-    user_metadata: { full_name: fullName },
+    phone,
+    user_metadata: { full_name: fullName, phone },
   });
 
   // Public form is for new business owners only — managers/staff join via owner/manager in CRM.
@@ -35,7 +42,7 @@ export async function submitAccessRequest(body) {
   const result = await accessRequestModel.createAccessRequest({
     email,
     fullName,
-    phone: body.phone?.trim(),
+    phone,
     companyName: body.companyName?.trim() ?? body.company_name?.trim(),
     message: body.message?.trim(),
     authUserId,

@@ -32,7 +32,8 @@ export function SupabaseConfigNotice() {
               <code>.env</code>
             </li>
             <li>
-              Optionally set <code>VITE_API_URL</code> for the Express API
+              Keep <code>VITE_API_URL=http://localhost:8080</code> in <code>.env</code> (see{' '}
+              <code>.env.example</code>)
             </li>
             <li>Run <code>npm run dev</code> again</li>
           </>

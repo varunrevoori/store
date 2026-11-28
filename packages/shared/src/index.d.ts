@@ -1,5 +1,17 @@
 export const API_PREFIX: '/api/v1';
 
+export const LOCAL_API_BASE: 'http://localhost:8080';
+export const LOCAL_WEB_ORIGIN: 'http://localhost:5173';
+
+export function trimTrailingSlash(value: unknown): string;
+export function resolveWebOrigins(env?: Record<string, string | undefined>): string[];
+export function resolveApiBase(options: {
+  apiUrlFromEnv?: string;
+  isDev: boolean;
+  browserOrigin?: string;
+}): string;
+export function deploymentLabel(env?: Record<string, string | undefined>): 'local' | 'production' | 'vercel';
+
 export type OrgRole =
   | 'owner'
   | 'manager'

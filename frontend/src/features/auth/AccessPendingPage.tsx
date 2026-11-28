@@ -1,7 +1,7 @@
 import { Spinner } from '@/components/ui/Spinner';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { useAuth } from './AuthProvider';
-import { isSuperadminSession } from './redirectAfterAuth';
+import { isSuperadminSession, redirectAfterAuth } from './redirectAfterAuth';
 import { apiFetchWithTimeout, getApiBaseUrl } from '@/lib/api';
 import { LonSaBackground } from '@/layout/LonSaBackground';
 import { useEffect, useState } from 'react';
@@ -16,6 +16,7 @@ export function AccessPendingPage() {
   const apiFromQuery = searchParams.get('api');
   const apiBase = apiFromQuery || getApiBaseUrl();
   const [checking, setChecking] = useState(!apiUnreachable);
+  const [syncing, setSyncing] = useState(false);
   const [isSuperadmin, setIsSuperadmin] = useState(false);
 
   useEffect(() => {
@@ -26,7 +27,7 @@ export function AccessPendingPage() {
       try {
         const boot = await apiFetchWithTimeout('/tenant/bootstrap', {}, 12_000);
         if (!cancelled && boot.ok) {
-          navigate('/app', { replace: true });
+          await redirectAfterAuth(navigate);
           return;
         }
         const isAdmin = await isSuperadminSession();
@@ -77,14 +78,20 @@ export function AccessPendingPage() {
             </p>
             <ol className="mt-4 text-sm text-muted list-decimal pl-5 space-y-2">
               <li>
-                Deploy the Express API (<code className="text-xs">backend/</code>) and set{' '}
-                <code className="text-xs">VITE_API_URL</code> on Vercel to that URL, then redeploy the frontend.
+                <strong className="text-ink">Local:</strong> copy <code className="text-xs">.env.example</code> →{' '}
+                <code className="text-xs">.env</code> and keep{' '}
+                <code className="text-xs">VITE_API_URL=http://localhost:8080</code>.
               </li>
               <li>
-                On the API, set <code className="text-xs">WEB_ORIGIN</code> to your Vercel site (e.g.{' '}
-                <code className="text-xs">https://store-jet-sigma.vercel.app</code>).
+                <strong className="text-ink">Production (one Vercel app):</strong> leave{' '}
+                <code className="text-xs">VITE_API_URL</code> unset — the app calls the API on the same domain.
               </li>
-              <li>Locally, use <code className="text-xs">VITE_API_URL=http://localhost:8080</code> in root .env.</li>
+              <li>
+                Set Supabase vars on the host (
+                <code className="text-xs">SUPABASE_URL</code>,{' '}
+                <code className="text-xs">SUPABASE_SERVICE_ROLE_KEY</code>, and the{' '}
+                <code className="text-xs">VITE_*</code> pair). Redeploy after env changes.
+              </li>
             </ol>
             <div className="mt-6 flex flex-col gap-2">
               <button
@@ -136,7 +143,18 @@ export function AccessPendingPage() {
                 Superadmin console
               </Link>
             ) : null}
-            <Link to="/request-access" className="btn-primary no-underline !h-11">
+            <button
+              type="button"
+              className="btn-primary !h-11"
+              disabled={syncing}
+              onClick={() => {
+                setSyncing(true);
+                void redirectAfterAuth(navigate).finally(() => setSyncing(false));
+              }}
+            >
+              {syncing ? 'Syncing workspace…' : 'Sync my workspace'}
+            </button>
+            <Link to="/request-access" className="btn-ghost no-underline !h-11 text-center">
               Request access (owners only)
             </Link>
             <button type="button" onClick={() => signOut()} className="btn-ghost !h-11">

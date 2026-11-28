@@ -57,7 +57,7 @@ export async function createAccessRequest({
   const row = {
     email: normalized,
     full_name: fullName,
-    phone: phone ?? null,
+    phone: phone && String(phone).trim() ? String(phone).trim() : null,
     company_name: companyName ?? null,
     message: message ?? null,
   };

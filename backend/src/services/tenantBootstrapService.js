@@ -2,6 +2,7 @@ import { PRISMA_ROLE_TO_API } from '@lon-crm/shared';
 import { createTtlCache } from '../lib/ttlCache.js';
 import { findPrimaryMembershipForProfile, upsertProfile } from '../models/tenantModel.js';
 import { resolveBranchId } from '../lib/resolveBranch.js';
+import { repairApprovedOwnerIfNeeded } from './approvedAccessRepairService.js';
 
 const bootstrapCache = createTtlCache(45_000);
 
@@ -16,6 +17,16 @@ export async function bootstrapForAuthUser(authUser) {
   if (!membership) {
     await upsertProfile(authUser);
     membership = await findPrimaryMembershipForProfile(authUser.id);
+  }
+  if (!membership) {
+    try {
+      const repaired = await repairApprovedOwnerIfNeeded(authUser);
+      if (repaired) {
+        membership = await findPrimaryMembershipForProfile(authUser.id);
+      }
+    } catch (err) {
+      console.error('[bootstrap] approved-access repair failed', err);
+    }
     if (!membership) return null;
   }
 
