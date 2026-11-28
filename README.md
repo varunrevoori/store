@@ -38,15 +38,58 @@ Or run one at a time: `npm run dev:backend`, `npm run dev:frontend`.
 
 Dev OTP **`482619`** is no longer used; OTP comes from Supabase/SMS.
 
-## Deploy frontend (Vercel)
+## Production — one deployment (frontend + API together)
 
-This repo is an **npm workspaces** monorepo; the Vite app lives in `frontend/` but install/build must run from the **repository root** (for `@lon-crm/shared`).
+The repo supports a **single host**: Express serves `/api/v1/*` and the built React app from `frontend/dist` on the **same URL** (e.g. [store-jet-sigma.vercel.app](https://store-jet-sigma.vercel.app)).
 
-1. **Project → Settings → General → Root Directory:** leave empty (`.` / repo root), not `frontend`.
-2. **Project → Settings → Build & Development:** clear any custom **Install Command** (remove `npm install --prefix=..`). Use defaults or the `vercel.json` in this repo (`npm install`, `npm run build`, output `frontend/dist`).
-3. **Environment variables:** set `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and `VITE_API_URL` (your hosted API URL).
+- **Vercel:** `vercel.json` builds the frontend, then routes all traffic to `api/index.js` (Express).
+- **Render / Railway / VPS:** `npm run build` then `npm start` with `NODE_ENV=production` (serves `frontend/dist` when present).
 
-Redeploy after changing Root Directory or install settings.
+Locally you still use two ports (`npm run dev` → Vite `:5173` + API `:8080`). In production the browser can use **same-origin** API calls (`VITE_API_URL` is optional).
+
+### Environment variables (one Vercel project)
+
+Set in **Vercel → Settings → Environment Variables** (Production). Redeploy after changes.
+
+| Variable | Required | Notes |
+|----------|----------|--------|
+| `VITE_SUPABASE_URL` | Yes | Build + runtime; Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | Yes | Build time; anon key only |
+| `SUPABASE_URL` | Yes | Runtime (API); same URL as above |
+| `SUPABASE_SERVICE_ROLE_KEY` | Yes | Runtime (API); **never** expose to browser |
+| `VITE_SKIP_AUTH` | Yes | `false` in production |
+| `SKIP_AUTH` | Yes | `false` in production |
+| `WEB_ORIGIN` | Recommended | `https://store-jet-sigma.vercel.app` (CORS if you ever split hosts) |
+| `VITE_API_URL` | **Optional** | Leave empty on unified deploy — app uses `window.location.origin` |
+| `DEFAULT_VERTICAL` | Optional | `salon` |
+
+**Example (unified Vercel):**
+
+```env
+VITE_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key
+SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+WEB_ORIGIN=https://store-jet-sigma.vercel.app
+VITE_SKIP_AUTH=false
+SKIP_AUTH=false
+```
+
+Vercel build: root directory `.`, use repo `vercel.json` (`npm install`, `npm run build`, rewrite → `/api`).
+
+### Render / Railway (same repo, one web service)
+
+| Setting | Value |
+|---------|--------|
+| Build command | `npm install && npm run build` |
+| Start command | `npm start` |
+| Env | Same table as above + `NODE_ENV=production` |
+
+### Checklist
+
+1. All secrets on **one** service (Vercel or Render), not split across two hosts.
+2. Redeploy after env changes (frontend env vars need a new build).
+3. Visit `/health` → `{ "ok": true }`. Visit `/login` → sign in should hit `/api/v1/tenant/bootstrap` on the **same domain**.
 
 ## Scripts
 

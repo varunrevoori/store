@@ -15,7 +15,8 @@
     "dev:backend": "npm run dev -w @lon-crm/backend",
     "check:env": "node scripts/check-env.mjs",
     "typecheck": "npm run typecheck -w @lon-crm/frontend",
-    "build": "npm run build -w @lon-crm/frontend"
+    "build": "npm run build -w @lon-crm/frontend",
+    "start": "npm run start -w @lon-crm/backend"
   },
   "devDependencies": {
     "concurrently": "^9.1.2",

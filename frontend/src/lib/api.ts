@@ -3,7 +3,16 @@ import { cachedGet, invalidateApiCache } from './apiCache';
 import { supabase } from './supabase';
 import { getStoredBranchId, getStoredOrgSlug } from './tenantStorage';
 
-const API_BASE = (import.meta.env.VITE_API_URL ?? 'http://localhost:8080').replace(/\/$/, '');
+function resolveApiBase(): string {
+  const fromEnv = String(import.meta.env.VITE_API_URL ?? '').trim().replace(/\/$/, '');
+  if (fromEnv) return fromEnv;
+  if (typeof window !== 'undefined' && window.location?.origin) {
+    return window.location.origin;
+  }
+  return 'http://localhost:8080';
+}
+
+const API_BASE = resolveApiBase();
 
 let readAccessToken: (() => string | null | undefined) | null = null;
 
