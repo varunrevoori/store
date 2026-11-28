@@ -19,6 +19,10 @@ function goApiUnreachable(navigate: NavigateFunction) {
 export async function redirectAfterAuth(navigate: NavigateFunction) {
   try {
     const res = await apiFetchWithTimeout('/tenant/bootstrap', {}, 12_000);
+    if (res.status >= 500) {
+      navigate(`/access-pending?reason=api&api=${encodeURIComponent(getApiBaseUrl())}`, { replace: true });
+      return;
+    }
     if (res.ok) {
       const data = (await res.json()) as {
         orgSlug: string;

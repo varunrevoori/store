@@ -56,9 +56,13 @@ export async function apiFetch(input: string, init: RequestInit = {}) {
     headers.set('Content-Type', 'application/json');
   }
 
-  const path = input.startsWith(API_PREFIX)
-    ? input
-    : `${API_PREFIX}${input.startsWith('/') ? input : `/${input}`}`;
+  const normalized = input.startsWith('/') ? input : `/${input}`;
+  const path =
+    normalized === '/health' || input.startsWith('http')
+      ? normalized
+      : input.startsWith(API_PREFIX)
+        ? input
+        : `${API_PREFIX}${normalized}`;
   const url = path.startsWith('http') ? path : `${API_BASE}${path}`;
   const isGet = (init.method ?? 'GET').toUpperCase() === 'GET';
   const useCache =

@@ -25,7 +25,18 @@ export function AccessPendingPage() {
     let cancelled = false;
     void (async () => {
       try {
+        const health = await apiFetchWithTimeout('/health', {}, 8_000);
+        if (!cancelled && !health.ok) {
+          const params = new URLSearchParams({ reason: 'api', api: getApiBaseUrl() });
+          navigate(`/access-pending?${params.toString()}`, { replace: true });
+          return;
+        }
         const boot = await apiFetchWithTimeout('/tenant/bootstrap', {}, 12_000);
+        if (!cancelled && boot.status >= 500) {
+          const params = new URLSearchParams({ reason: 'api', api: getApiBaseUrl() });
+          navigate(`/access-pending?${params.toString()}`, { replace: true });
+          return;
+        }
         if (!cancelled && boot.ok) {
           await redirectAfterAuth(navigate);
           return;
@@ -71,7 +82,9 @@ export function AccessPendingPage() {
           <div className="glass-auth-card max-w-md text-left">
             <h1 className="font-display text-xl font-bold text-ink text-center">Can&apos;t reach the API</h1>
             <p className="mt-3 text-sm text-muted leading-relaxed">
-              You&apos;re signed in with Supabase, but the app could not load your workspace from the backend.
+              You&apos;re signed in with Supabase, but the <strong className="text-ink">API on this host is failing</strong>{' '}
+              (common right after deploy if the serverless bundle is incomplete). Local dev still works because it uses{' '}
+              <code className="text-xs">localhost:8080</code> directly.
             </p>
             <p className="mt-3 text-sm text-muted">
               Current API URL: <code className="text-xs break-all">{apiBase}</code>

@@ -1,5 +1,5 @@
 /**
- * Vercel serverless entry — one deployment: Express API + built React app.
+ * Vercel serverless entry — one deployment: Express API + built React app (native ESM).
  */
 import '../backend/src/config/env.js';
 import { createApp } from '../backend/src/app.js';

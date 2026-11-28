@@ -1,7 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm install",
+  "installCommand": "node scripts/vercel-install.mjs",
   "buildCommand": "npm run build",
   "framework": null,
-  "rewrites": [{ "source": "/(.*)", "destination": "/api" }]
+  "functions": {
+    "api/index.mjs": {
+      "includeFiles": "backend/src/**,packages/shared/**,frontend/dist/**"
+    }
+  },
+  "rewrites": [{ "source": "/(.*)", "destination": "/api/index.mjs" }]
 }

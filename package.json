@@ -1,7 +1,14 @@
 {
   "name": "lon-crm",
   "private": true,
+  "type": "module",
   "version": "0.1.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "allowScripts": {
+    "esbuild": true
+  },
   "description": "Salon + store CRM — React (TS) frontend, Express (JS) backend",
   "workspaces": [
     "frontend",

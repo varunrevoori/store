@@ -10,7 +10,7 @@ if (shouldServeFrontend()) {
 }
 
 if (process.env.VERCEL) {
-  // Vercel runs the app via api/index.js export (no listen).
+  // Vercel runs the app via api/index.mjs export (no listen).
 } else {
   app.listen(port, '0.0.0.0', () => {
     console.log(`Lon CRM backend (Express) listening on http://localhost:${port}`);
