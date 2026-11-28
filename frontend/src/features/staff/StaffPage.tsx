@@ -12,7 +12,8 @@ import { Modal } from '@/components/ui/Modal';
 import { EditStaffMemberForm } from '@/features/staff/EditStaffMemberForm';
 import { apiFetch, invalidateApiCache } from '@/lib/api';
 import { IndianRupee, Pencil, Trash2, Users } from 'lucide-react';
-import type { CSSProperties, ComponentType } from 'react';
+import type { LucideIcon } from 'lucide-react';
+import type { CSSProperties } from 'react';
 import { useMemo, useState } from 'react';
 
 type StaffRow = {
@@ -43,7 +44,7 @@ function StaffStat({
   label: string;
   value: string;
   sub?: string;
-  icon: ComponentType<{ size?: number }>;
+  icon: LucideIcon;
   accent: string;
 }) {
   return (

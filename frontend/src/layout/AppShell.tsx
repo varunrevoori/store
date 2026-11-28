@@ -18,7 +18,8 @@ import {
 import { TenantProvider, useTenant } from '@/context/TenantContext';
 import { hasPermission } from '@lon-crm/shared';
 import { ROUTE_PERMISSIONS } from '@/lib/routeAccess';
-import type { ComponentType, ReactNode } from 'react';
+import type { LucideIcon } from 'lucide-react';
+import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -171,7 +172,7 @@ function NavGroup({
   withRailSpacer,
 }: {
   label: string;
-  items: { to: string; label: string; icon: ComponentType<{ size?: number; strokeWidth?: number; className?: string }> }[];
+  items: { to: string; label: string; icon: LucideIcon }[];
   iconOnly?: boolean;
   withRailSpacer?: boolean;
 }) {

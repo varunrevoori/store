@@ -1,7 +1,10 @@
 import { Search, X } from 'lucide-react';
 import type { InputHTMLAttributes, Ref } from 'react';
 
-type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'className' | 'value' | 'onChange'> & {
+type Props = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  'type' | 'className' | 'value' | 'onChange' | 'size'
+> & {
   value: string;
   onChange: (value: string) => void;
   className?: string;
